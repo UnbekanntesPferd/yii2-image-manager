@@ -18,6 +18,9 @@ use yii\behaviors\BlameableBehavior;
  * @property string $modified
  * @property string $createdBy
  * @property string $modifiedBy
+ *
+ * @property ImageManagerImageManagerTag[] $imageManagerTags
+ * @property ImageManagerTag[] $imageTags
  */
 class ImageManager extends \yii\db\ActiveRecord { 
 
@@ -157,4 +160,19 @@ class ImageManager extends \yii\db\ActiveRecord {
 		return $return;
 	}
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getImageManagerTags()
+    {
+        return $this->hasMany(ImageManagerImageManagerTag::className(), ['ImageManager_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getImageTags()
+    {
+        return $this->hasMany(ImageManagerTag::className(), ['id' => 'ImageManagerTag_id'])->viaTable('ImageManager_ImageManagerTag', ['ImageManager_id' => 'id']);
+    }
 }

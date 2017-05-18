@@ -1,6 +1,10 @@
 <?php
+use kartik\select2\Select2;
+use noam148\imagemanager\models\ImageManagerTag;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 use yii\widgets\ListView;
 use yii\widgets\Pjax;
 use kartik\file\FileInput;
@@ -50,7 +54,23 @@ $this->title = Yii::t('imagemanager','Image manager');
 		</div>
 		<div class="col-xs-6 col-sm-2 col-options">
 			<div class="form-group">
-				<?=Html::textInput('input-mediamanager-search', null, ['id'=>'input-mediamanager-search', 'class'=>'form-control', 'placeholder'=>Yii::t('imagemanager','Search').'...'])?>
+                <?php
+                    $form = ActiveForm::begin([
+                        'id' => 'mediamanager-search-form',
+                        'method' => 'get',
+                    ]);
+                ?>
+                    <?= $form->field($searchModel, 'globalSearch')->textInput(['placeholder' => Yii::t('imagemanager','Search').'...'])->label(false); ?>
+                    <?= $form->field($searchModel, 'ImageManagerTag_id')->widget(Select2::className(), [
+                        'data' => ArrayHelper::map(ImageManagerTag::find()->all(), 'id', 'name'),
+                        'options' => [
+                            'placeholder' => Yii::t('imagemanager', 'Tags'),
+                            'multiple' => true,
+                        ]
+                    ])->label(false) ?>
+                <?php
+                    ActiveForm::end()
+                ?>
 			</div>
 
 			<?php

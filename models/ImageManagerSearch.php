@@ -14,6 +14,7 @@ use noam148\imagemanager\Module;
 class ImageManagerSearch extends ImageManager
 {
 	public $globalSearch;
+	public $ImageManagerTag_id;
 	
     /**
      * @inheritdoc
@@ -21,7 +22,7 @@ class ImageManagerSearch extends ImageManager
     public function rules()
     {
         return [
-            [['globalSearch'], 'safe'],
+            [['globalSearch', 'ImageManagerTag_id'], 'safe'],
         ];
     }
 
@@ -44,6 +45,7 @@ class ImageManagerSearch extends ImageManager
     public function search($params)
     {
         $query = ImageManager::find();
+        $query->joinWith(['imageManagerTags']);
 
         // add conditions that should always apply here
 
@@ -70,9 +72,12 @@ class ImageManagerSearch extends ImageManager
             $query->andWhere(['createdBy' => Yii::$app->user->id]);
         }
 
-        $query->orFilterWhere(['like', 'fileName', $this->globalSearch])
-            ->orFilterWhere(['like', 'created', $this->globalSearch])
-			->orFilterWhere(['like', 'modified', $this->globalSearch]);
+        $query
+            ->orFilterWhere(['like', 'ImageManager.fileName', $this->globalSearch])
+            ->orFilterWhere(['like', 'ImageManager.created', $this->globalSearch])
+			->orFilterWhere(['like', 'ImageManager.modified', $this->globalSearch]);
+
+        $query->andFilterWhere(['ImageManagerTag_id' => $this->ImageManagerTag_id]);
 
         return $dataProvider;
     }

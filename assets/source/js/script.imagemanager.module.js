@@ -29,11 +29,18 @@ var imageManagerModule = {
 		});
 	},
 	//filter result
-	filterImageResult: function(searchTerm){
+	filterImageResult: function(searchObject){
 		//set new url
-		var newUrl = window.queryStringParameter.set(window.location.href, "ImageManagerSearch[globalSearch]", searchTerm);
+		// var newUrl = window.queryStringParameter.set(window.location.href, "ImageManagerSearch[globalSearch]", searchTerm);
+		// var newUrl = window.queryStringParameter.set(window.location.href, )
+		var baseUrl = window.location.href;
+		var paramaters = $.param(searchObject);
+		var searchUrl = baseUrl+'?'+paramaters;
+
+		console.log(searchUrl);
+
 		//set pjax
-		$.pjax({url: newUrl, container: "#pjax-mediamanager", push: false, replace: false, timeout: 5000, scrollTo:false});
+		$.pjax({url: searchUrl, container: "#pjax-mediamanager", push: false, replace: false, timeout: 5000, scrollTo:false});
 	},	
 	//select an image
 	selectImage: function(id){
@@ -325,8 +332,15 @@ $(document).ready(function () {
 		return false;
 	});
 	//on keyup change set filter
-	$( document ).on("keyup change", "#input-mediamanager-search", function() {
-		imageManagerModule.filterImageResult($(this).val());
+	// $( document ).on("keyup change", "#input-mediamanager-search", function() {
+	// 	imageManagerModule.filterImageResult($(this).val());
+	// });
+
+	$(document).on('change submit', 'form#mediamanager-search-form', function(e) {
+		e.preventDefault();
+        imageManagerModule.filterImageResult($(this).serializeArray());
+
+        console.log('test');
 	});
 	
 });

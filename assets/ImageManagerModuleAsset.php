@@ -20,4 +20,7 @@ class ImageManagerModuleAsset extends AssetBundle
 		'yii\web\JqueryAsset',
         'yii\bootstrap\BootstrapPluginAsset',
     ];
+    public $publishOptions = [
+        'forceCopy' => true,
+    ];
 }
